@@ -4,7 +4,7 @@ const app = express()
 
 app.use(express.static('./public'));
 app.use('/queue', require('./queue.js'));
-app.use('/player', require('./player.js'));
+app.use('/video', require('./video.js'));
 
 
 // set port, listen for requests
