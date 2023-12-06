@@ -53,7 +53,7 @@ class _KaraokeHomeState extends State<KaraokeHome> {
 	@override
 	void initState() {
 		super.initState();
-		_controller = createVideo();
+		_controller = createVideo(0);
 	}
 
   @override
@@ -62,9 +62,9 @@ class _KaraokeHomeState extends State<KaraokeHome> {
     super.dispose();
   }
 
-	VideoPlayerController createVideo() {
+	VideoPlayerController createVideo(int timestamp) {
     return VideoPlayerController.networkUrl(
-      Uri.parse(_video_path),
+      Uri.parse(_video_path + "?t=" + timestamp.toString()),
     )
 		..addListener(() {
       if (
@@ -72,7 +72,7 @@ class _KaraokeHomeState extends State<KaraokeHome> {
 				_controller.value.position == _controller.value.duration
 			) {
 				print("video end");
-				_controller = createVideo();
+				_controller = createVideo(DateTime.now().millisecondsSinceEpoch);
 				setState((){});
       }
     })
