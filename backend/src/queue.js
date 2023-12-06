@@ -1,42 +1,51 @@
 const express = require('express');
 const router = express.Router();
 
-ds = {
+
+playback = {
 	'next': undefined, //only used for /?next
 	'queue': [],
 }
 
+
 router.get('/', (req, res) => {
-	if (req.params.next && ds.queue.length) {
-		ds.next = ds.queue.shift();
+	const {queue} = playback;
+	if (req.params.next) {
+		playback.next = next();
 	}
-	res.json(ds);
+	res.json(playback);
 });
 
 // insert
 router.post('/', (req, res) => {
-	ds.queue.push(req.body.song);
-	res.json(ds);
+	const {queue} = playback;
+	queue.push(req.body.song);
+	res.json(playback);
 });
 
 // shuffle
 router.put('/', (req, res) => {
-	ds.queue = ds.queue
+	playback.queue = playback.queue
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
-	res.json(ds);
+	res.json(playback);
 });
 
 // interrupt
 router.put('/:id', (req, res) => {
-	const { queue }  = ds;
+	const {queue}  = playback;
 	i = queue.findIndex(s=>s.id===req.params.id)
 	if (i > 0) {
 		const head = delete queue[i];
 		queue.unshift(head);
 	}
-	res.json(ds);
+	res.json(playback);
 });
 
-module.exports = router;
+function next() {
+	const {queue} = playback;
+	return queue.length && queue.shift();
+}
+
+module.exports = {router, next};

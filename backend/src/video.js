@@ -2,48 +2,65 @@ const fs = require("fs");
 const range = require('range-parser');
 const express = require('express');
 const router = express.Router();
+const queue = require('./queue.js');
 
-var cur = undefined;
 
 const videoDir = "/home/david/workspace/karaoke/videos/";
-const videos = [videoDir + "test1.mp4", videoDir + "test2.mp4"];
-var currentVideo = 0;
+
+var cur = undefined;
+function currentVideo(next=false) {
+	if (next) {
+		cur = queue.next();
+	}
+	return cur ? videoDir + cur : videoDir + "test1.mp4";
+}
+
+function getContentType(path) {
+	if (path.endsWith('mp4')) {
+		return 'video/mp4';
+	}
+	else if (path.endsWith('mkv')) {
+ 		return "video/x-matroska";
+	}
+}
 
 router.get("/", (req, res) => {
-	//const videoPath = videoDir + "Twins-恋爱大过[粤语].mp4";
-	//const resHeader = { "Content-Type": "video/x-matroska" };
-	const resHeader = { "Content-Type": "video/mp4" };
-
 	const rangeHeader = req.headers.range;
-	if (!rangeHeader) {
-		currentVideo = 1 - currentVideo;
-		console.log("first access", currentVideo);
-		const videoPath = videos[currentVideo];
+	if (rangeHeader) {
+		var videoPath = currentVideo();
+		var videoSize = fs.statSync(videoPath).size;
+		var {start, end} = range(videoSize, rangeHeader)[0];
+		if (start === 0) {
+			videoPath = currentVideo(true);
+			videoSize = fs.statSync(videoPath).size;
+			const ranges = range(videoSize, rangeHeader);
+			start = ranges[0].start;
+			end = ranges[0].end;
+		}
+		console.log(videoPath, start, end);
+		const videoStream = fs.createReadStream(videoPath, { start, end });
+
+		const chunkSize = (end - start + 1);
+		res.writeHead(206, {
+			"Content-Type": getContentType(videoPath),
+			"Content-Length": chunkSize,
+			"Accept-Ranges": "bytes",
+			"Content-Range": `bytes ${start}-${end}/${videoSize}`,
+		});
+		videoStream.pipe(res);
+	}
+	else {
+		const videoPath = currentVideo(true);
 		const videoSize = fs.statSync(videoPath).size;
     const videoStream = fs.createReadStream(videoPath);
+		console.log(videoPath);
     res.writeHead(200, {
-			...resHeader,
+			"Content-Type": getContentType(videoPath),
 			"Content-Length": videoSize,
+			"Accept-Ranges": "bytes",
 		});
-
-    videoStream.pipe(res);
-		return;
+		videoStream.pipe(res);
 	}
-
-	const videoPath = videos[currentVideo];
-	const videoSize = fs.statSync(videoPath).size;
-	const ranges = range(videoSize, rangeHeader);
-	const {start, end} = ranges[0];
-	const videoStream = fs.createReadStream(videoPath, { start, end });
-
-	const chunkSize = (end - start + 1);
-	res.writeHead(206, {
-		...resHeader,
-		"Content-Length": chunkSize,
-		"Content-Range": `bytes ${start}-${end}/${videoSize}`,
-		"Accept-Ranges": "bytes",
-	});
-	videoStream.pipe(res);
 });
 
-module.exports = router;
+module.exports = {router};

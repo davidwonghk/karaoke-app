@@ -2,9 +2,10 @@ require("dotenv").config();
 const express = require('express')
 const app = express()
 
+app.use(express.json());
 app.use(express.static('./public'));
-app.use('/queue', require('./queue.js'));
-app.use('/video', require('./video.js'));
+app.use('/queue', require('./queue.js').router);
+app.use('/video', require('./video.js').router);
 
 
 // set port, listen for requests
