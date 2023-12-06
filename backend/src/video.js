@@ -5,16 +5,21 @@ const router = express.Router();
 
 var cur = undefined;
 
-const videoDir = "/home/david/workspace/karaoke/videos/"
+const videoDir = "/home/david/workspace/karaoke/videos/";
+const videos = [videoDir + "test1.mp4", videoDir + "test2.mp4"];
+var currentVideo = 0;
 
 router.get("/", (req, res) => {
-	const videoPath = videoDir + "Twins-恋爱大过[粤语].mp4";
-	const videoSize = fs.statSync(videoPath).size;
+	//const videoPath = videoDir + "Twins-恋爱大过[粤语].mp4";
 	//const resHeader = { "Content-Type": "video/x-matroska" };
 	const resHeader = { "Content-Type": "video/mp4" };
 
 	const rangeHeader = req.headers.range;
 	if (!rangeHeader) {
+		currentVideo = 1 - currentVideo;
+		console.log("first access", currentVideo);
+		const videoPath = videos[currentVideo];
+		const videoSize = fs.statSync(videoPath).size;
     const videoStream = fs.createReadStream(videoPath);
     res.writeHead(200, {
 			...resHeader,
@@ -25,6 +30,8 @@ router.get("/", (req, res) => {
 		return;
 	}
 
+	const videoPath = videos[currentVideo];
+	const videoSize = fs.statSync(videoPath).size;
 	const ranges = range(videoSize, rangeHeader);
 	const {start, end} = ranges[0];
 	const videoStream = fs.createReadStream(videoPath, { start, end });

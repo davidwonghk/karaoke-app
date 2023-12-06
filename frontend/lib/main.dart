@@ -43,9 +43,9 @@ class KaraokeHome extends StatefulWidget {
 }
 
 class _KaraokeHomeState extends State<KaraokeHome> {
+	final String _video_path = "http://localhost:8080/video";
   int _volume = 50;
 	bool _accompany = false;
-	String _video_path = "http://localhost:8080/video";
 
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
@@ -53,17 +53,7 @@ class _KaraokeHomeState extends State<KaraokeHome> {
 	@override
 	void initState() {
 		super.initState();
-
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(_video_path),
-    )
-		..addListener(() {
-			if (!_controller.value.isPlaying) {
-				print("video end");
-			}
-		})
-		..setLooping(true)
-		..initialize();
+		_controller = createVideo();
 	}
 
   @override
@@ -72,10 +62,22 @@ class _KaraokeHomeState extends State<KaraokeHome> {
     super.dispose();
   }
 
-	void _next_song() {
-		setState(() {
-			_video_path = "";
-		});
+	VideoPlayerController createVideo() {
+    return VideoPlayerController.networkUrl(
+      Uri.parse(_video_path),
+    )
+		..addListener(() {
+      if (
+				_controller.value.isInitialized && 
+				_controller.value.position == _controller.value.duration
+			) {
+				print("video end");
+				_controller = createVideo();
+				setState((){});
+      }
+    })
+		..initialize().then((_) => setState((){}))
+		..play();
 	}
 
   @override
@@ -87,10 +89,15 @@ class _KaraokeHomeState extends State<KaraokeHome> {
     // than having to individually change instances of widgets.
     return Scaffold(
       body: Center(
-				child: VideoPlayer(_controller),
+				child: _controller.value.isInitialized
+				? AspectRatio(
+					aspectRatio: _controller.value.aspectRatio,
+					child: VideoPlayer(_controller)
+				) 
+				: CircularProgressIndicator()
 			),
       floatingActionButton: FloatingActionButton(
-        onPressed: _next_song,
+        onPressed: null,
         tooltip: 'Play Video',
         child: const Icon(Icons.play_arrow),
       ), 
