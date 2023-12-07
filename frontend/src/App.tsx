@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Container, Toolbar, Tabs, Tab } from '@mui/material';
+import { Stack, AppBar, Box, Toolbar, Tabs, Tab } from '@mui/material';
 import { Button } from './Buttons';
 import SwipeableList from './SwipeableList';
 
@@ -17,30 +17,24 @@ function App() {
   const dispatch = useDispatch();
   const handleChange = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
   return (
-		<div>
-			<AppBar position="static">
+		<Stack direction='column'>
+			<AppBar position="sticky">
 				<Tabs value={activeTab} onChange={handleChange} variant="fullWidth"> <Tab icon={<QueueMusicIcon />} value="queue" label="Queue" />
 					<Tab icon={<ManageSearchIcon />} value="search" label="Search" />
 				</Tabs>
 			</AppBar>
 
-			<Container style={{ flexGrow: 1, overflow: 'auto' }}>
-				<SwipeableList/>
-			</Container>
+			<SwipeableList/>
 
-      <Toolbar
-				disableGutters
-        sx={{
-          position: 'fixed', bottom: 0, width: '100%', 
-					display: 'flex', justifyContent: 'space-between',
-        }}
-      >
-				<Button aria-label='accompaniment' icon={<InterpreterModeIcon />}>Accompaniment</Button>
-				<Button aria-label='shuffle' icon={<ShuffleIcon />}>Shuffle</Button>
-				<Button aria-label='skip' icon={<SkipNextIcon />}>Skip</Button>
-      </Toolbar>
+			<AppBar position="sticky" sx={{ top: 'auto', bottom: 0}}>
+				<Toolbar disableGutters>
+					<Button aria-label='accompaniment' icon={<InterpreterModeIcon />}>Accompaniment</Button>
+					<Button aria-label='shuffle' icon={<ShuffleIcon />}>Shuffle</Button>
+					<Button aria-label='skip' icon={<SkipNextIcon />}>Skip</Button>
+				</Toolbar>
+			</AppBar>
 
-		</div>
+		</Stack>
   );
 }
 

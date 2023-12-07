@@ -1,11 +1,12 @@
 import {
-LeadingActions,
-SwipeableList,
-SwipeableListItem,
-SwipeAction,
-TrailingActions,
+	LeadingActions,
+	SwipeableList,
+	SwipeableListItem,
+	SwipeAction,
+	TrailingActions,
 } from 'react-swipeable-list';
 import 'react-swipeable-list/dist/styles.css';
+//import './SwipeableList.css';
 
 const leadingActions = () => (
 <LeadingActions>
@@ -26,21 +27,20 @@ const trailingActions = () => (
 </TrailingActions>
 );
 
-const SwipeableSong = () => (
+const SwipeableSong = ({...props}) => (
 	<SwipeableListItem
 		leadingActions={leadingActions()}
 		trailingActions={trailingActions()}
 	>
-		Item content
+		{props.children}
 	</SwipeableListItem>
+
 )
 
 export default () => (
 	<SwipeableList>
-		<SwipeableSong/>
-		<SwipeableSong/>
-		<SwipeableSong/>
-		<SwipeableSong/>
-		<SwipeableSong/>
+      {Array.from({ length: 50 }, (_, i) => i).map((item) => (
+				<SwipeableSong>{item}</SwipeableSong>
+      ))}
 	</SwipeableList>
 )
