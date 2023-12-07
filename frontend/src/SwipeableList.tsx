@@ -10,9 +10,9 @@ import 'react-swipeable-list/dist/styles.css';
 const KSwipeableList = ({children} : {children: any[]}) => (
 	<div>
 		<SwipeableList>
-				{children.reduce((acc, cur, idx) => {
+				{(children || []).reduce((acc, cur, idx) => {
 					acc.push(cur);
-					acc.push(<Divider sx={{ borderBottomWidth: 3 }}/>);
+					acc.push(<Divider />);
 					return acc;
 				}, [] as any[])}
 		</SwipeableList>

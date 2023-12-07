@@ -1,4 +1,4 @@
-import { Typography, IconButton } from '@mui/material';
+import { Typography, IconButton, Box, Divider } from '@mui/material';
 import SwipeableList from './SwipeableList'
 
 import {
@@ -12,53 +12,70 @@ import {
 	TrailingActions,
 } from 'react-swipeable-list';
 
-const onClick = console.log.bind(this);
+import { useSelector, useDispatch } from 'react-redux'
 
-const KLeadingActions = ({...props}) => (
-	<LeadingActions>
-		<SwipeAction onClick={onClick}>
-			<IconButton size={props.size} color={props.color}>
-				<Typography color={props.color}>Play Next</Typography>
-				<MoveUpIcon />
-			</IconButton>
-		</SwipeAction>
-	</LeadingActions>
-);
+const QueueTab = () => {
+  const dispatch = useDispatch();
 
-const KTrailingActions = ({...props}) => (
-	<TrailingActions>
-		<SwipeAction onClick={onClick}>
-			<IconButton size={props.size} color={props.color}>	
-				<DeleteIcon />
-				<Typography color={props.color}>Delete</Typography>
-			</IconButton>
-		</SwipeAction>
-	</TrailingActions>
-);
+  const handleNext = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
+  const handleDelete = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
 
-interface QueueListItemProps {
-	size: any,
-	color: string,
-	children: any,
+	// define the style
+	const size = 'small';
+	const color = 'primary';
+
+	const KLeadingActions = () => (
+		<LeadingActions>
+			<SwipeAction onClick={handleNext}>
+				<IconButton size={size} color={color}>
+					<Typography color={color}>Play Next</Typography>
+					<MoveUpIcon />
+				</IconButton>
+			</SwipeAction>
+		</LeadingActions>
+	);
+
+	const KTrailingActions = () => (
+		<TrailingActions>
+			<SwipeAction onClick={handleDelete}>
+				<IconButton size={size} color={color}>	
+					<DeleteIcon />
+					<Typography color={color}>Delete</Typography>
+				</IconButton>
+			</SwipeAction>
+		</TrailingActions>
+	);
+
+	const QueueListItem = ({children} : {children: any}) => (
+		<SwipeableListItem
+			leadingActions={<KLeadingActions />}
+			trailingActions={<KTrailingActions />}
+			onClick={onClick}
+			maxSwipe={0.8}
+		>
+				<Typography noWrap align='justify' color={color} variant='h4'>
+					{children}
+				</Typography>
+		</SwipeableListItem>
+	);
+
+	const QueueList = () => (
+		<SwipeableList>
+			{Array.from({ length: 7 }, (_, i) => i).map((item) => (
+				<QueueListItem>{item}</QueueListItem>
+			))}
+		</SwipeableList>
+	);
+
+	return (
+	<Stack direction='column'>
+		<Box>Playing: </Box>
+		<Divider />
+		<Box>Next: </Box>
+		<Divider />
+		<QueueList />
+	</Stack>
+	);
 }
-const QueueListItem = ({size, color, children} : QueueListItemProps) => (
-	<SwipeableListItem
-		leadingActions={<KLeadingActions size={size} color={color} />}
-		trailingActions={<KTrailingActions size={size} color={color} />}
-		onClick={onClick}
-		maxSwipe={0.8}
-	>
-			<Typography noWrap align='justify' color={color} variant='h4'>
-				{children}
-			</Typography>
-	</SwipeableListItem>
-);
 
-const QueueList = () => (
-	<SwipeableList>
-		{Array.from({ length: 7 }, (_, i) => i).map((item) => (
-			<QueueListItem size='small' color='primary'>{item}</QueueListItem>
-		))}
-	</SwipeableList>
-);
-export default QueueList;
+export default QueueTab;

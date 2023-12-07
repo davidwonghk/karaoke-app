@@ -2,8 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import tabReducer from "./tabSlice";
 
 
-export default configureStore({
+const store = configureStore({
 	reducer: {
 		tab: tabReducer,
 	},
 })
+
+export default store;
+

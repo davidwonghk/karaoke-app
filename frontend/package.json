@@ -21,6 +21,8 @@
     "react-scripts": "5.0.1",
     "react-swipeable-list": "^1.9.3",
     "redux": "^5.0.0",
+    "redux-thunk": "^3.1.0",
+    "typed-rest-client": "^1.8.11",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

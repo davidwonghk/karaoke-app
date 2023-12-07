@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const videoDir = "/home/david/workspace/karaoke/videos/";
-const videos = [videoDir + "test1.mp4", videoDir + "test2.mp4"];
 var currentVideo = 0;
 
 router.get("/", (req, res) => {
