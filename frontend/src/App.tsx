@@ -1,17 +1,18 @@
 import React from 'react';
 import { Stack, AppBar, Toolbar, Tabs, Tab } from '@mui/material';
-import { Button } from './Buttons';
-import SwipeableList from './SwipeableList';
-
 import {
 	QueueMusic as QueueMusicIcon, 
 	ManageSearch as ManageSearchIcon,
 	SkipNext as SkipNextIcon,
 	Shuffle as ShuffleIcon,
 	InterpreterMode as InterpreterModeIcon,
-	Delete as DeleteIcon,
-	MoveUp as MoveUpIcon,
 } from '@mui/icons-material';
+
+import { Button } from './Buttons';
+import SwipeableList from './SwipeableList';
+import QueueTab from './QueueTab';
+import SearchTab from './SearchTab';
+
 
 import { useSelector, useDispatch } from 'react-redux'
 import { change } from './store/tabSlice';
@@ -28,15 +29,10 @@ function App() {
 				</Tabs>
 			</AppBar>
 
-			<SwipeableList
-				size='small'
-				color='primary'
-				onClick={(e:any)=>console.log(e)}
-				leadingIcon={<DeleteIcon color='primary'/>}
-				leadingHandle={(e:any)=>console.log(e)}
-				trailingIcon={<MoveUpIcon color='primary'/>}
-				trailingHandle={(e: any)=>console.log(e)}
-			/>
+			{activeTab == 'queue'
+				? <QueueTab />
+				: <SearchTab />
+			}
 
 			<AppBar position="sticky" sx={{ top: 'auto', bottom: 0}}>
 				<Toolbar disableGutters>
