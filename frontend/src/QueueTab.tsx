@@ -12,18 +12,19 @@ import {
 } from 'react-swipeable-list';
 
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { useDispatch } from './store';
+import store from './store';
 import { getQueue } from './store/queueSlice';
+import { Song } from './client';
 
 
 const QueueTab = () => {
-	const dispatch = useDispatch()
-	useEffect(() => dispatch(()=>{
-		getQueue();
-		return () => {};
-	}), []);
+  const dispatch = useDispatch<typeof store.dispatch>();
+	useEffect(() => {
+		dispatch(getQueue());
+	}, []);
+	
 	const queue = useSelector((state: any) => state.queue.queue);
 
 //  const moveToTop = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
@@ -62,7 +63,7 @@ const QueueTab = () => {
 			onClick={onClick}
 			maxSwipe={0.8}
 		>
-				<Typography noWrap align='justify' color={color} variant='h4'>
+				<Typography noWrap align='justify' color={color} variant='h6'>
 					{children}
 				</Typography>
 		</SwipeableListItem>
@@ -70,8 +71,8 @@ const QueueTab = () => {
 
 	const QueueList = () => (
 		<SwipeableList>
-			{queue.map((item: string) => (
-				<QueueListItem>{item}</QueueListItem>
+			{queue.map((song: Song) => (
+				<QueueListItem>{song.name}</QueueListItem>
 			))}
 		</SwipeableList>
 	);

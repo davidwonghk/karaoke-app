@@ -5,6 +5,10 @@ import {
 	shuffleQueue as cShuffleQueue,
 } from '../client';
 
+type State = {
+	queue: Song[],
+};
+
 export const getQueue = createAsyncThunk('queue/getQueue', cGetQueue);
 
 export const shuffleQueue = createAsyncThunk('queue/shuffleQueue', cShuffleQueue);
@@ -12,15 +16,15 @@ export const shuffleQueue = createAsyncThunk('queue/shuffleQueue', cShuffleQueue
 export const queueSlice = createSlice({
   name: 'queue',
   initialState: {
-		queue: [] as Song[],
+		queue: []
   },
   reducers: {
   },
   extraReducers(builder) {
-    builder.addCase(getQueue.fulfilled, (state: {queue: string[]}, action) => {
+    builder.addCase(getQueue.fulfilled, (state: State, action) => {
       state.queue = action.payload.queue;
     });
-		builder.addCase(shuffleQueue.fulfilled, (state: {queue: string[]}, action) => {
+		builder.addCase(shuffleQueue.fulfilled, (state: State, action) => {
 			state.queue = action.payload.queue;
 		});
   },

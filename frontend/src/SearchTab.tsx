@@ -36,7 +36,7 @@ const SearchListItem = ({size, color, children} : SearchListItemProps) => (
 		onClick={onClick}
 		maxSwipe={0.8}
 	>
-			<Typography noWrap align='justify' color={color} variant='h4'>
+			<Typography noWrap align='justify' color={color} >
 				{children}
 			</Typography>
 	</SwipeableListItem>

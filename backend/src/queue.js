@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
 });
 
 // shuffle
-router.post('/shuffle', (req, res) => {
+router.put('/', (req, res) => {
 	playback.queue = playback.queue
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -35,7 +35,7 @@ router.post('/shuffle', (req, res) => {
 });
 
 // interrupt
-router.post('/interrupt/:id', (req, res) => {
+router.put('/:id', (req, res) => {
 	const {queue}  = playback;
 	i = queue.findIndex(s=>s.id===req.params.id);
 	if (i > 0) {

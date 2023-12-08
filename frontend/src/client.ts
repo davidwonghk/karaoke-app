@@ -13,29 +13,29 @@ export type QueueResponse = {
 }
 
 export async function getQueue() : Promise<QueueResponse> {
-	const res = await axios.get(url + '/queue');
+	const res = await axios.get(url+'/queue');
 	return res.data;
 }
 
 export async function appendQueue(name: string): Promise<QueueResponse> {
-	const res = await axios.post(url + '/queue', {name});
+	const res = await axios.post(url+'/queue', {name});
 	return res.data;
 }
 
 //cut song
 export async function shiftQueue(): Promise<QueueResponse> {
 	const params = { next: "true" };
-	const res = await axios.get('/queue', {params});
+	const res = await axios.get(url+'/queue', {params});
 	return res.data;
 }
 
 export async function interruptQueue(id: string): Promise<QueueResponse> {
-	const res = await axios.put('/queue/' + id);
+	const res = await axios.put(url+'/queue/' + id);
 	return res.data;
 }
 
 export async function shuffleQueue(): Promise<QueueResponse> {
-	const res = await axios.put('/queue', null);
+	const res = await axios.put(url+'/queue', null);
 	return res.data;
 }
 
