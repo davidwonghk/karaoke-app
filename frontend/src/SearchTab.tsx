@@ -18,7 +18,7 @@ const KLeadingActions = ({...props}) => (
 	<LeadingActions>
 		<SwipeAction onClick={onClick}>
 			<IconButton size={props.size} color={props.color}>
-			<Typography color={props.color}>Play Next</Typography>
+			<Typography color={props.color}>Interrupt</Typography>
 				<MoveUpIcon />
 			</IconButton>
 		</SwipeAction>

@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
-export const slice = createSlice({
+export const tabSlice = createSlice({
   name: 'tab',
   initialState: {
     value: 'queue',
@@ -10,9 +10,9 @@ export const slice = createSlice({
       state.value = action.payload;
     },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { change } = slice.actions
+export const { change } = tabSlice.actions;
 
-export default slice.reducer
+export default tabSlice.reducer;

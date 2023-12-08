@@ -1,6 +1,5 @@
-import { Typography, IconButton, Box, Divider } from '@mui/material';
+import { Stack, Typography, IconButton, Box, Divider } from '@mui/material';
 import SwipeableList from './SwipeableList'
-
 import {
 	Delete as DeleteIcon,
 	MoveUp as MoveUpIcon,
@@ -12,13 +11,23 @@ import {
 	TrailingActions,
 } from 'react-swipeable-list';
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux'
+
+import { useDispatch } from './store';
+import { getQueue } from './store/queueSlice';
+
 
 const QueueTab = () => {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch()
+	useEffect(() => dispatch(()=>{
+		getQueue();
+		return () => {};
+	}), []);
+	const queue = useSelector((state: any) => state.queue.queue);
 
-  const handleNext = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
-  const handleDelete = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
+//  const moveToTop = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
+	const onClick = console.log.bind(this);
 
 	// define the style
 	const size = 'small';
@@ -26,9 +35,9 @@ const QueueTab = () => {
 
 	const KLeadingActions = () => (
 		<LeadingActions>
-			<SwipeAction onClick={handleNext}>
+			<SwipeAction onClick={onClick}>
 				<IconButton size={size} color={color}>
-					<Typography color={color}>Play Next</Typography>
+					<Typography color={color}>Interrupt</Typography>
 					<MoveUpIcon />
 				</IconButton>
 			</SwipeAction>
@@ -37,7 +46,7 @@ const QueueTab = () => {
 
 	const KTrailingActions = () => (
 		<TrailingActions>
-			<SwipeAction onClick={handleDelete}>
+			<SwipeAction onClick={onClick}>
 				<IconButton size={size} color={color}>	
 					<DeleteIcon />
 					<Typography color={color}>Delete</Typography>
@@ -61,7 +70,7 @@ const QueueTab = () => {
 
 	const QueueList = () => (
 		<SwipeableList>
-			{Array.from({ length: 7 }, (_, i) => i).map((item) => (
+			{queue.map((item: string) => (
 				<QueueListItem>{item}</QueueListItem>
 			))}
 		</SwipeableList>

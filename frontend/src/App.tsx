@@ -15,7 +15,9 @@ import SearchTab from './SearchTab';
 
 
 import { useSelector, useDispatch } from 'react-redux'
+import store from './store';
 import { change } from './store/tabSlice';
+import { shuffleQueue } from './store/queueSlice';
 
 function App() {
 	const activeTab = useSelector((state: any) => state.tab.value);
