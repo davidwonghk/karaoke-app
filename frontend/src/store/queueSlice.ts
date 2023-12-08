@@ -1,17 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { 
-	Song,
-	getQueue as cGetQueue,
-	shuffleQueue as cShuffleQueue,
-} from '../client';
+import { Song, getQueue } from '../client';
 
 type State = {
 	queue: Song[],
 };
 
-export const getQueue = createAsyncThunk('queue/getQueue', cGetQueue);
-
-export const shuffleQueue = createAsyncThunk('queue/shuffleQueue', cShuffleQueue);
+export const updateQueue = createAsyncThunk('queue/updateQueue', getQueue);
 
 export const queueSlice = createSlice({
   name: 'queue',
@@ -21,12 +15,9 @@ export const queueSlice = createSlice({
   reducers: {
   },
   extraReducers(builder) {
-    builder.addCase(getQueue.fulfilled, (state: State, action) => {
+    builder.addCase(updateQueue.fulfilled, (state: State, action) => {
       state.queue = action.payload.queue;
     });
-		builder.addCase(shuffleQueue.fulfilled, (state: State, action) => {
-			state.queue = action.payload.queue;
-		});
   },
 });
 

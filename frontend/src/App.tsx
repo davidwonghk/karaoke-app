@@ -16,13 +16,12 @@ import SearchTab from './SearchTab';
 
 import store from './store';
 import { change } from './store/tabSlice';
-import { shuffleQueue } from './store/queueSlice';
+import { shuffleQueue } from './client';
 
 function App() {
 	const activeTab = useSelector((state: any) => state.tab.value);
   const dispatch = useDispatch<typeof store.dispatch>();
 	const onChangeTab = (_: any, val: string) => {dispatch(change(val))};
-	const onClickShuffle = () => {dispatch(shuffleQueue())};
   return (
 		<Stack direction='column' sx={{backgroundColor: 'black'}}>
 			<AppBar position="sticky">
@@ -42,7 +41,7 @@ function App() {
 					<Button aria-label='accompaniment' icon={<InterpreterModeIcon />}>
 						Accompaniment
 					</Button>
-					<Button aria-label='shuffle' icon={<ShuffleIcon />} onClick={onClickShuffle}>
+					<Button aria-label='shuffle' icon={<ShuffleIcon />} onClick={shuffleQueue}>
 						Shuffle
 					</Button>
 					<Button aria-label='skip' icon={<SkipNextIcon />}>Skip</Button>

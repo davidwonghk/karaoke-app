@@ -15,14 +15,14 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 
 import store from './store';
-import { getQueue } from './store/queueSlice';
+import { updateQueue } from './store/queueSlice';
 import { Song } from './client';
 
 
 const QueueTab = () => {
   const dispatch = useDispatch<typeof store.dispatch>();
 	useEffect(() => {
-		dispatch(getQueue());
+		dispatch(updateQueue());
 	}, []);
 	
 	const queue = useSelector((state: any) => state.queue.queue);
@@ -34,24 +34,34 @@ const QueueTab = () => {
 	const size = 'small';
 	const color = 'primary';
 
+	const MyText = ({children}: {children:any}) => (
+			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={color}>
+				{children}
+			</Typography>
+	);
+
 	const KLeadingActions = () => (
 		<LeadingActions>
 			<SwipeAction onClick={onClick}>
+				<Box style={{backgroundColor:'green'}}>
 				<IconButton size={size} color={color}>
-					<Typography color={color}>Interrupt</Typography>
+					<MyText>Interrupt</MyText>
 					<MoveUpIcon />
 				</IconButton>
+				</Box>
 			</SwipeAction>
 		</LeadingActions>
 	);
 
 	const KTrailingActions = () => (
-		<TrailingActions>
-			<SwipeAction onClick={onClick}>
+		<TrailingActions >
+			<SwipeAction onClick={onClick} destructive={true}>
+				<Box style={{backgroundColor:'red'}}>
 				<IconButton size={size} color={color}>	
+					<MyText>Delete</MyText>
 					<DeleteIcon />
-					<Typography color={color}>Delete</Typography>
 				</IconButton>
+				</Box>
 			</SwipeAction>
 		</TrailingActions>
 	);
@@ -63,9 +73,7 @@ const QueueTab = () => {
 			onClick={onClick}
 			maxSwipe={0.8}
 		>
-				<Typography noWrap align='justify' color={color} variant='h6'>
-					{children}
-				</Typography>
+			<MyText>{children}</MyText>
 		</SwipeableListItem>
 	);
 
@@ -79,9 +87,9 @@ const QueueTab = () => {
 
 	return (
 	<Stack direction='column'>
-		<Box>Playing: </Box>
+		<MyText>Playing: </MyText>
 		<Divider />
-		<Box>Next: </Box>
+		<MyText>Next: </MyText>
 		<Divider />
 		<QueueList />
 	</Stack>
