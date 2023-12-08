@@ -19,12 +19,14 @@ router.get('/', (req, res) => {
 // insert
 router.post('/', (req, res) => {
 	const {queue} = playback;
-	queue.push(req.body.song);
+	const {name} = req.body;
+	const id = Date.now();
+	queue.push({name, id});
 	res.json(playback);
 });
 
 // shuffle
-router.put('/', (req, res) => {
+router.post('/shuffle', (req, res) => {
 	playback.queue = playback.queue
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -33,12 +35,21 @@ router.put('/', (req, res) => {
 });
 
 // interrupt
-router.put('/:id', (req, res) => {
+router.post('/interrupt/:id', (req, res) => {
 	const {queue}  = playback;
-	i = queue.findIndex(s=>s.id===req.params.id)
+	i = queue.findIndex(s=>s.id===req.params.id);
 	if (i > 0) {
 		const head = delete queue[i];
 		queue.unshift(head);
+	}
+	res.json(playback);
+});
+
+router.delete('/:id', (req, res) => {
+	const {queue}  = playback;
+	i = queue.findIndex(s=>s.id===req.params.id);
+	if (i > 0) {
+		delete queue[i];
 	}
 	res.json(playback);
 });
