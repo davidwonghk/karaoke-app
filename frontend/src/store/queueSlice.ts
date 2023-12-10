@@ -5,14 +5,18 @@ type State = {
 	queue: Song[],
 };
 
+
 export const updateQueue = createAsyncThunk('queue/updateQueue', getQueue);
 
 export const queueSlice = createSlice({
   name: 'queue',
   initialState: {
-		queue: []
+		queue: [],
   },
   reducers: {
+		update: (state, action) => {
+			state.queue = action.payload.queue;
+		},
   },
   extraReducers(builder) {
     builder.addCase(updateQueue.fulfilled, (state: State, action) => {
@@ -21,8 +25,9 @@ export const queueSlice = createSlice({
   },
 });
 
+
 // Action creators are generated for each case reducer function
 //export const { suffle } = queueSlice.actions;
 
 export default queueSlice.reducer;
-
+export const { update } = queueSlice.actions;

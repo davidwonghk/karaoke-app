@@ -1,10 +1,13 @@
 import axios from 'axios'
 
-const url = 'http://localhost:8080';
+const apiUrl = 'http://localhost:8080';
+const wsUrl = 'ws://localhost:8081';
+//const apiUrl = location.origin;
+//const wsUrl = apiUrl.replace(/^http/, 'ws');
 
 export type Song = {
 	name: string,
-	id: number,
+	id: string,
 }
 
 export type QueueResponse = {
@@ -13,29 +16,39 @@ export type QueueResponse = {
 }
 
 export async function getQueue() : Promise<QueueResponse> {
-	const res = await axios.get(url+'/queue');
+	const res = await axios.get(apiUrl+'/queue');
 	return res.data;
 }
 
 export async function appendQueue(name: string): Promise<QueueResponse> {
-	const res = await axios.post(url+'/queue', {name});
+	const res = await axios.post(apiUrl+'/queue', {name});
 	return res.data;
 }
 
 //cut song
 export async function shiftQueue(): Promise<QueueResponse> {
 	const params = { next: "true" };
-	const res = await axios.get(url+'/queue', {params});
+	const res = await axios.get(apiUrl+'/queue', {params});
 	return res.data;
 }
 
 export async function interruptQueue(id: string): Promise<QueueResponse> {
-	const res = await axios.put(url+'/queue/' + id);
+	const url = apiUrl+'/queue/' + id;
+	console.log('interrupt', url);
+	const res = await axios.put(url);
 	return res.data;
 }
 
 export async function shuffleQueue(): Promise<QueueResponse> {
-	const res = await axios.put(url+'/queue', null);
+	const res = await axios.put(apiUrl+'/queue', null);
 	return res.data;
 }
 
+export async function deleteFromQueue(id: string): Promise<QueueResponse> {
+	const res = await axios.delete(apiUrl+'/queue/' + id);
+	return res.data;
+}
+
+export function getWebSocket() {
+	return new WebSocket(wsUrl);
+}
