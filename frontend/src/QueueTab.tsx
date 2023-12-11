@@ -23,20 +23,15 @@ const socket = getWebSocket();
 socket.onmessage = (event) => {
 	const data = JSON.parse(event.data);
 	if (data.queue) {
-		console.log('got signal to update queue');
 		store.dispatch(update(data));
 	}
 };
 
+store.dispatch(updateQueue());
+
 const QueueTab = () => {
   const dispatch = useDispatch<typeof store.dispatch>();
-	useEffect(() => {
-		dispatch(updateQueue());
-	});
-	
 	const queue = useSelector((state: any) => state.queue.queue);
-
-//  const moveToTop = (event: React.SyntheticEvent, val: string) => dispatch(change(val));
 
 	// define the style
 	const size = 'small';
@@ -78,7 +73,7 @@ const QueueTab = () => {
 		<SwipeableListItem
 			leadingActions={leadingActions(key)}
 			trailingActions={trailingActions(key)}
-			onClick={console.log.bind(this)}
+			onClick={()=>console.log("on click")}
 			maxSwipe={0.5}
 		>
 			<MyText>{children}</MyText>
