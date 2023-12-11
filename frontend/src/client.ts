@@ -49,6 +49,16 @@ export async function deleteFromQueue(id: string): Promise<QueueResponse> {
 	return res.data;
 }
 
+export async function searchSongs(
+	query: string='',
+	offset: number=0,
+	limit: number|undefined=undefined
+) {
+	const res = await axios.get(`${apiUrl}/songs?query=${query}&offset=${offset}&limit=${limit}`);
+	return res.data;
+}
+
+
 export function getWebSocket() {
 	return new WebSocket(wsUrl);
 }

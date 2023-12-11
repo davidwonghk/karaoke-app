@@ -11,7 +11,6 @@ import {
 	TrailingActions,
 } from 'react-swipeable-list';
 
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 
 import store from './store';
@@ -30,12 +29,12 @@ socket.onmessage = (event) => {
 store.dispatch(updateQueue());
 
 const QueueTab = () => {
-  const dispatch = useDispatch<typeof store.dispatch>();
+  //const dispatch = useDispatch<typeof store.dispatch>();
 	const queue = useSelector((state: any) => state.queue.queue);
 
 	// define the style
 	const size = 'small';
-	const color = 'primary';
+	const color = 'white';
 
 	const MyText = ({children}: {children:any}) => (
 			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={color}>
@@ -47,7 +46,7 @@ const QueueTab = () => {
 		<LeadingActions>
 			<SwipeAction onClick={()=>interruptQueue(key)}>
 				<Box style={{backgroundColor:'green'}}>
-				<IconButton size={size} color={color}>
+				<IconButton size={size}>
 					<MyText>Interrupt</MyText>
 					<MoveUpIcon />
 				</IconButton>
@@ -60,7 +59,7 @@ const QueueTab = () => {
 		<TrailingActions >
 			<SwipeAction onClick={()=>deleteFromQueue(key)}>
 				<Box style={{backgroundColor:'red'}}>
-				<IconButton size={size} color={color}>	
+				<IconButton size={size}>	
 					<MyText>Delete</MyText>
 					<DeleteIcon />
 				</IconButton>

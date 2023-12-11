@@ -1,8 +1,7 @@
-import { Typography, IconButton } from '@mui/material';
+import { Stack, Typography, IconButton, Box, Divider, TextField } from '@mui/material';
 import SwipeableList from './SwipeableList'
 
 import {
-	Delete as DeleteIcon,
 	MoveUp as MoveUpIcon,
 } from '@mui/icons-material';
 import {
@@ -12,41 +11,93 @@ import {
 	TrailingActions,
 } from 'react-swipeable-list';
 
-const onClick = console.log.bind(this);
+import { useDispatch, useSelector } from 'react-redux'
 
-const KLeadingActions = ({...props}) => (
-	<LeadingActions>
-		<SwipeAction onClick={onClick}>
-			<IconButton size={props.size} color={props.color}>
-			<Typography color={props.color}>Interrupt</Typography>
-				<MoveUpIcon />
-			</IconButton>
-		</SwipeAction>
-	</LeadingActions>
-);
+import store from './store';
+import { searchSongs, query } from './store/searchSlice';
+import { Song, interruptQueue, appendQueue } from './client';
 
-interface SearchListItemProps {
-	size: any,
-	color: string,
-	children: any,
-}
-const SearchListItem = ({size, color, children} : SearchListItemProps) => (
-	<SwipeableListItem
-		leadingActions={<KLeadingActions size={size} color={color} />}
-		onClick={onClick}
-		maxSwipe={0.8}
-	>
-			<Typography noWrap align='justify' color={color} >
+
+store.dispatch(searchSongs({
+	query: '',
+	offset: 0,
+	limit: 100,
+}));
+
+const SearchTab = () => {
+
+  const dispatch = useDispatch<typeof store.dispatch>();
+	const onChange = (e: any) => {
+		const {value} = e.target;
+		dispatch(query(value));
+		dispatch(searchSongs({
+			query: value,
+			offset: 0,
+			limit: 100,
+		}));
+	};
+
+	const addAndInterrupt = async(name: string) => {
+		const {queue} = await appendQueue(name);
+		const song = queue.filter((s: Song)=>s.name === name).pop();
+		if (song)
+			await interruptQueue(song.name);
+	};
+
+	const {queryTxt, songs} = useSelector((state: any) => state.search);
+	const queue = useSelector((state: any) => state.queue.queue);
+	const queued = new Set(queue.map((s:any) => s.name));
+
+	// define the style
+	const size = 'small';
+	const color = 'white';
+
+	const MyText = ({children, selected}: {children:any, selected?: boolean}) => (
+			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={selected ? 'green' : color}>
 				{children}
 			</Typography>
-	</SwipeableListItem>
-);
+	);
 
-const SearchList = () => (
-	<SwipeableList>
-		{Array.from({ length: 50 }, (_, i) => i).map((item) => (
-			<SearchListItem size='small' color='secondary'>{item}</SearchListItem>
-		))}
-	</SwipeableList>
-);
-export default SearchList;
+	const leadingActions = (name: string) => (
+		<LeadingActions>
+			<SwipeAction onClick={()=>addAndInterrupt(name)}>
+				<Box style={{backgroundColor:'green'}}>
+				<IconButton size={size}>
+					<MyText>Interrupt</MyText>
+					<MoveUpIcon />
+				</IconButton>
+				</Box>
+			</SwipeAction>
+		</LeadingActions>
+	);
+
+	const SearchListItem = ({children, selected} : {children: any, selected: boolean}) => (
+		<SwipeableListItem
+			key = {children}
+			leadingActions={leadingActions(children)}
+			onClick={() => selected ? undefined : appendQueue(children)}
+			maxSwipe={0.5}
+		>
+			<MyText selected={selected}>{children}</MyText>
+		</SwipeableListItem>
+	);
+
+	const SongList = () => (
+		<SwipeableList>
+			{songs.map((song: Song) => (
+				<SearchListItem selected={queued.has(song.name)}>{song.name}</SearchListItem>
+			))}
+		</SwipeableList>
+	);
+
+	return (
+	<Stack direction='column'>
+		<TextField id="outlined-search" label="Search song" type="search" onChange={onChange} defaultValue={queryTxt}>
+		</TextField>
+		<Divider />
+		<SongList />
+	</Stack>
+	);
+}
+
+export default SearchTab;
