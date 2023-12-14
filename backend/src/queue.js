@@ -9,7 +9,7 @@ const payload = {
 
 router.get('/', (req, res) => {
 	const {queue} = payload;
-	if (req.params.next) {
+	if (req.query.next) {
 		payload.next = next();
 	}
 	return res.json(payload);
@@ -37,7 +37,7 @@ router.put('/', (req, res) => {
 router.put('/:id', (req, res) => {
 	const {queue}  = payload;
 	i = queue.findIndex(s=>s.id===req.params.id);
-	if (i > 0) {
+	if (i > 0) { //no need to interrupt if i == 0
 		const head = queue[i];
 		queue.splice(i, 1);
 		queue.unshift(head);
@@ -48,7 +48,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
 	const {queue}  = payload;
 	i = queue.findIndex(s=>s.id===req.params.id);
-	if (i > 0) {
+	if (i >= 0) {
 		queue.splice(i, 1);
 	}
 	boardcastUpdate(res);
@@ -56,16 +56,21 @@ router.delete('/:id', (req, res) => {
 
 function next() {
 	const {queue} = payload;
-	return queue.length && queue.shift();
+	const res = queue.length && queue.shift();
+	boardcast();
+	return res;
 }
 
 const wss = new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_PORT});
-function boardcastUpdate(res) {
+function boardcast() {
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
 			client.send(JSON.stringify(payload));
 		}
 	});
+}
+function boardcastUpdate(res) {
+	boardcast();
 	return res.json(payload);
 }
 

@@ -1,4 +1,4 @@
-import { Stack, Typography, IconButton, Box, Divider, TextField } from '@mui/material';
+import { Stack, Typography, IconButton, Box, Divider, TextField, Badge } from '@mui/material';
 import SwipeableList from './SwipeableList'
 
 import {
@@ -41,19 +41,23 @@ const SearchTab = () => {
 		const {queue} = await appendQueue(name);
 		const song = queue.filter((s: Song)=>s.name === name).pop();
 		if (song)
-			await interruptQueue(song.name);
+			await interruptQueue(song.id);
 	};
 
 	const {queryTxt, songs} = useSelector((state: any) => state.search);
-	const queue = useSelector((state: any) => state.queue.queue);
-	const queued = new Set(queue.map((s:any) => s.name));
+	const counter = useSelector((state: any) => state.queue.queue)
+	                .map((s:Song) => s.name)
+									.reduce((d:any,i:string) => {
+										d[i] = (d[i]||0) + 1;
+										return d;
+									}, {});
 
 	// define the style
 	const size = 'small';
 	const color = 'white';
 
-	const MyText = ({children, selected}: {children:any, selected?: boolean}) => (
-			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={selected ? 'green' : color}>
+	const MyText = ({children}: {children:any}) => (
+			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={color}>
 				{children}
 			</Typography>
 	);
@@ -71,21 +75,22 @@ const SearchTab = () => {
 		</LeadingActions>
 	);
 
-	const SearchListItem = ({children, selected} : {children: any, selected: boolean}) => (
+	const SearchListItem = ({children, count} : {children: any, count: number}) => (
 		<SwipeableListItem
 			key = {children}
 			leadingActions={leadingActions(children)}
-			onClick={() => selected ? undefined : appendQueue(children)}
+			onClick={() => appendQueue(children)}
 			maxSwipe={0.5}
 		>
-			<MyText selected={selected}>{children}</MyText>
+			<MyText>{children}</MyText>
+			{count && <Badge badgeContent={count} color="success" sx={{paddingLeft: 2}}/> }
 		</SwipeableListItem>
 	);
 
 	const SongList = () => (
 		<SwipeableList>
 			{songs.map((song: Song) => (
-				<SearchListItem selected={queued.has(song.name)}>{song.name}</SearchListItem>
+				<SearchListItem count={counter[song.name]}>{song.name}</SearchListItem>
 			))}
 		</SwipeableList>
 	);

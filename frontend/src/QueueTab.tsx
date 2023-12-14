@@ -68,11 +68,11 @@ const QueueTab = () => {
 		</TrailingActions>
 	);
 
-	const QueueListItem = ({key, children} : {key: string, children: any}) => (
+	const QueueListItem = ({sid, key, children} : {sid: string, key: string, children: any}) => (
 		<SwipeableListItem
-			leadingActions={leadingActions(key)}
-			trailingActions={trailingActions(key)}
-			onClick={()=>console.log("on click")}
+			leadingActions={leadingActions(sid)}
+			trailingActions={trailingActions(sid)}
+			onClick={()=>console.log(sid)}
 			maxSwipe={0.5}
 		>
 			<MyText>{children}</MyText>
@@ -81,8 +81,8 @@ const QueueTab = () => {
 
 	const QueueList = () => (
 		<SwipeableList>
-			{queue.map((song: Song) => (
-				<QueueListItem key={song.id}>{song.name}</QueueListItem>
+			{queue.map((song: Song, idx: number) => (
+				<QueueListItem sid={song.id} key={song.id}>{idx+1}. {song.name}</QueueListItem>
 			))}
 		</SwipeableList>
 	);
