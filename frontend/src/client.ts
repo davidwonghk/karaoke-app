@@ -58,6 +58,11 @@ export async function searchSongs(
 	return res.data;
 }
 
+export async function getCurrentPlaying() {
+	const res = await axios.get(`${apiUrl}/play/current`);
+	return res.data;
+}
+
 
 export function getWebSocket() {
 	return new WebSocket(wsUrl);

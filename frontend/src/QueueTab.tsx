@@ -14,8 +14,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import store from './store';
-import { updateQueue, update } from './store/queueSlice';
-import { Song, deleteFromQueue, interruptQueue, getWebSocket } from './client';
+import { updateQueue, updateCurrent, update } from './store/queueSlice';
+import { Song, deleteFromQueue, interruptQueue, getWebSocket, getCurrentPlaying} from './client';
 
 
 const socket = getWebSocket();
@@ -23,21 +23,23 @@ socket.onmessage = (event) => {
 	const data = JSON.parse(event.data);
 	if (data.queue) {
 		store.dispatch(update(data));
+		store.dispatch(updateCurrent());
 	}
 };
 
 store.dispatch(updateQueue());
+store.dispatch(updateCurrent());
 
 const QueueTab = () => {
   //const dispatch = useDispatch<typeof store.dispatch>();
 	const queue = useSelector((state: any) => state.queue.queue);
+	const playing = useSelector((state: any) => state.queue.current);
 
 	// define the style
 	const size = 'small';
-	const color = 'white';
 
-	const MyText = ({children}: {children:any}) => (
-			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={color}>
+	const MyText = ({children, color='white', variant='h5'}: {children:any, color?:string, variant?:any}) => (
+			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant={variant} color={color}>
 				{children}
 			</Typography>
 	);
@@ -89,9 +91,7 @@ const QueueTab = () => {
 
 	return (
 	<Stack direction='column'>
-		<MyText>Playing: </MyText>
-		<Divider />
-		<MyText>Next: </MyText>
+		<MyText color='green' variant='h4'>Playing: {playing}</MyText>
 		<Divider />
 		<QueueList />
 	</Stack>
