@@ -1,26 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Song, getQueue } from '../client';
+import { getControlFlags } from '../client';
 
 type State = {
-	queue: Song[],
+	accompaniment: boolean,
 };
 
 
-export const getAndUpdate = createAsyncThunk('queue/getAndUpdate', getQueue);
+export const getAndUpdate = createAsyncThunk('control/getAndUpdate', getControlFlags);
 
 export const slice = createSlice({
-  name: 'queue',
+  name: 'control',
   initialState: {
-		queue: [],
-  },
+		accompaniment: false,
+  } as State,
   reducers: {
 		update: (state, action) => {
-			state.queue = action.payload.queue;
+			state.accompaniment = action.payload.accompaniment;
 		},
   },
   extraReducers(builder) {
     builder.addCase(getAndUpdate.fulfilled, (state: State, action) => {
-      state.queue = action.payload.queue;
+			state.accompaniment = action.payload.accompaniment;
     });
   },
 });

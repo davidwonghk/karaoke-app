@@ -11,24 +11,10 @@ import {
 	TrailingActions,
 } from 'react-swipeable-list';
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import store from './store';
-import { updateQueue, updateCurrent, update } from './store/queueSlice';
-import { Song, deleteFromQueue, interruptQueue, getWebSocket, getCurrentPlaying} from './client';
+import { Song, deleteFromQueue, interruptQueue } from './client';
 
-
-const socket = getWebSocket();
-socket.onmessage = (event) => {
-	const data = JSON.parse(event.data);
-	if (data.queue) {
-		store.dispatch(update(data));
-		store.dispatch(updateCurrent());
-	}
-};
-
-store.dispatch(updateQueue());
-store.dispatch(updateCurrent());
 
 const QueueTab = () => {
   //const dispatch = useDispatch<typeof store.dispatch>();

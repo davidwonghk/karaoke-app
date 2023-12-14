@@ -63,7 +63,22 @@ export async function getCurrentPlaying() {
 	return res.data;
 }
 
+export async function getControlFlags() {
+	const res = await axios.get(`${apiUrl}/control`);
+	return res.data;
+}
+
+export async function skipSong() {
+	const res = await axios.post(`${apiUrl}/control/skip`);
+	return res.data;
+}
+
+export async function triggerAccompaniment() {
+	const res = await axios.post(`${apiUrl}/control/accompaniment`);
+	return res.data;
+}
 
 export function getWebSocket() {
 	return new WebSocket(wsUrl);
 }
+

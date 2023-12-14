@@ -1,4 +1,4 @@
-const { WebSocketServer } = require('ws');
+const WebSocket = require('ws');
 
 function boardcast(wss, payload) {
 	wss.clients.forEach((client) => {
@@ -9,12 +9,12 @@ function boardcast(wss, payload) {
 }
 
 const remote = {
-	wss: new WebSocketServer({port: process.env.WEBSOCKET_PORT}),
+	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_PORT}),
 	boardcast: (payload) => boardcast(remote.wss, payload),
 }
 
 const tv = {
-	wss: new WebSocketServer({port: process.env.WEBSOCKET_TV_PORT}),
+	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_TV_PORT}),
 	boardcast: (payload) => boardcast(tv.wss, payload),
 }
 

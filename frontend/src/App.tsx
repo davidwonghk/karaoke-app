@@ -10,16 +10,19 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Button } from './Buttons';
-import SwipeableList from './SwipeableList';
 import QueueTab from './QueueTab';
 import SearchTab from './SearchTab';
 
 import store from './store';
+import syncWithBackend from './store/sync';
 import { change } from './store/tabSlice';
-import { shuffleQueue } from './client';
+import { shuffleQueue, skipSong, triggerAccompaniment } from './client';
+
+syncWithBackend();
 
 function App() {
 	const activeTab = useSelector((state: any) => state.tab.value);
+	const accompaniment = useSelector((state: any) => state.control.accompaniment);
   const dispatch = useDispatch<typeof store.dispatch>();
 	const onChangeTab = (_: any, val: string) => {dispatch(change(val))};
   return (
@@ -38,13 +41,17 @@ function App() {
 
 			<AppBar position="sticky" sx={{ top: 'auto', bottom: 0}}>
 				<Toolbar disableGutters>
-					<Button aria-label='accompaniment' icon={<InterpreterModeIcon />}>
+					<Button 
+						aria-label='accompaniment'
+						icon={<InterpreterModeIcon color={accompaniment?'success':'inherit'}/>}
+						onClick={triggerAccompaniment}
+					>
 						Accompaniment
 					</Button>
 					<Button aria-label='shuffle' icon={<ShuffleIcon />} onClick={shuffleQueue}>
 						Shuffle
 					</Button>
-					<Button aria-label='skip' icon={<SkipNextIcon />}>Skip</Button>
+					<Button aria-label='skip' icon={<SkipNextIcon />} onClick={skipSong}>Skip</Button>
 				</Toolbar>
 			</AppBar>
 

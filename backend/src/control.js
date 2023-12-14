@@ -7,15 +7,18 @@ const payload = {
 	'accompaniment': false,
 };
 
+router.get('/', (req, res) => {
+	res.json(payload);
+});
 
-router.put('/accompaniment', (req, res) => {
+router.post('/accompaniment', (req, res) => {
 	payload.accompaniment = !payload.accompaniment;
 	wss.remote.boardcast(payload);
 	wss.tv.boardcast(payload);
 	res.json(payload);
 });
 
-router.put('skip', (req, res) => {
+router.post('/skip', (req, res) => {
 	wss.tv.boardcast(payload);
 });
 
