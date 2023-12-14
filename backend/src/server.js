@@ -10,15 +10,18 @@ const PORT = process.env.NODE_DOCKER_PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use('/videos', express.static('../videos'));
 app.use('/queue', require('./queue.js').router);
 app.use('/songs', require('./songs.js').router);
+app.use('/control', require('./control.js').router);
 app.get('/play/current', play.current);
-app.use('/play', proxy(`http://192.168.8.124:${PORT}`, {
+app.use('/play', proxy(process.env.VIDEO_HOST, {
 		proxyReqPathResolver: play.resolver
 	}
 ));
 
+// videos content server, 
+// may move to a standalone server in the future
+app.use('/videos', express.static('../videos'));
 
 
 // set port, listen for requests

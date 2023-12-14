@@ -1,11 +1,11 @@
 const express = require('express');
+const { remote: wss } = require('./wss.js');
 const router = express.Router();
-const WebSocket = require('ws');
 
 const payload = {
 	'next': undefined, //only used for /?next
 	'queue': [],
-}
+};
 
 router.get('/', (req, res) => {
 	const {queue} = payload;
@@ -57,21 +57,13 @@ router.delete('/:id', (req, res) => {
 function next() {
 	const {queue} = payload;
 	const res = queue.length && queue.shift();
-	boardcast();
+	wss.boardcast(payload);
 	return res;
 }
 
-const wss = new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_PORT});
-function boardcast() {
-	wss.clients.forEach((client) => {
-		if (client.readyState === WebSocket.OPEN) {
-			client.send(JSON.stringify(payload));
-		}
-	});
-}
 function boardcastUpdate(res) {
-	boardcast();
-	return res.json(payload);
+	wss.boardcast(payload);
+	res.json(payload);
 }
 
 module.exports = {router, next};
