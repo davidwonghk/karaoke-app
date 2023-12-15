@@ -80,7 +80,8 @@ const SearchTab = () => {
 			key = {children}
 			leadingActions={leadingActions(children)}
 			onClick={() => appendQueue(children)}
-			maxSwipe={0.5}
+			maxSwipe={0.4}
+			onSwipeProgress={(progress, dir) => (dir==='right' && progress>=30) && addAndInterrupt(children)}
 		>
 			<MyText>{children}</MyText>
 			{count && <Badge badgeContent={count} color="success" sx={{paddingLeft: 2}}/> }

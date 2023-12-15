@@ -61,7 +61,8 @@ const QueueTab = () => {
 			leadingActions={leadingActions(sid)}
 			trailingActions={trailingActions(sid)}
 			onClick={()=>console.log(sid)}
-			maxSwipe={0.5}
+			maxSwipe={0.4}
+			onSwipeProgress={(progress, dir) => (progress>=30) && (dir==='left' ? deleteFromQueue(sid) : interruptQueue(sid))}
 		>
 			<MyText>{children}</MyText>
 		</SwipeableListItem>
