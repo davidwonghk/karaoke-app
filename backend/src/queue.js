@@ -22,7 +22,8 @@ router.post('/', (req, res) => {
 	const {name} = req.body;
 	const id = Date.now().toString();
 	queue.push({name, id});
-	broadcastUpdate(res);
+	broadcast();
+	res.json(payload);
 });
 
 // shuffle
@@ -31,7 +32,8 @@ router.put('/', (req, res) => {
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
-	broadcastUpdate(res);
+	broadcast();
+	res.json(payload);
 });
 
 // interrupt
@@ -43,7 +45,8 @@ router.put('/:id', (req, res) => {
 		queue.splice(i, 1);
 		queue.unshift(head);
 	}
-	broadcastUpdate(res);
+	broadcast();
+	res.json(payload);
 });
 
 router.delete('/:id', (req, res) => {
@@ -52,7 +55,8 @@ router.delete('/:id', (req, res) => {
 	if (i >= 0) {
 		queue.splice(i, 1);
 	}
-	broadcastUpdate(res);
+	broadcast();
+	res.json(payload);
 });
 
 function next() {
@@ -62,9 +66,8 @@ function next() {
 	return res;
 }
 
-function broadcastUpdate(res) {
+function broadcast() {
 	wss.broadcast(payload);
-	res.json(payload);
 }
 
-module.exports = {router, next};
+module.exports = {router, next, broadcast};

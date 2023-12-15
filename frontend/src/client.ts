@@ -59,7 +59,7 @@ export async function searchSongs(
 }
 
 export async function getCurrentPlaying() {
-	const res = await axios.get(`${apiUrl}/play/current`);
+	const res = await axios.get(`${apiUrl}/current`);
 	return res.data;
 }
 

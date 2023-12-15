@@ -19,7 +19,7 @@ import { Song, deleteFromQueue, interruptQueue } from './client';
 const QueueTab = () => {
   //const dispatch = useDispatch<typeof store.dispatch>();
 	const queue = useSelector((state: any) => state.queue.queue);
-	const playing = useSelector((state: any) => state.play.current);
+	const current = useSelector((state: any) => state.play.current);
 
 	// define the style
 	const size = 'small';
@@ -77,7 +77,7 @@ const QueueTab = () => {
 
 	return (
 	<Stack direction='column'>
-		<MyText color='green' variant='h4'>Playing: {playing}</MyText>
+		<MyText color='green' variant='h4'>Playing: {current}</MyText>
 		<Divider />
 		<QueueList />
 	</Stack>

@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/queue', require('./queue.js').router);
 app.use('/songs', require('./songs.js').router);
 app.use('/control', require('./control.js').router);
-app.get('/play/current', play.current);
+app.get('/current', play.current);
 app.use('/play', proxy(process.env.VIDEO_HOST, {
 		proxyReqPathResolver: play.resolver
 	}

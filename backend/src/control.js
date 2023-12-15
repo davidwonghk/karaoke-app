@@ -20,7 +20,7 @@ router.post('/accompaniment', (req, res) => {
 });
 
 router.post('/skip', (req, res) => {
-	wss.tv.broadcast(payload);
+	wss.tv.broadcast({skip: true});
 });
 
 module.exports = {router};
