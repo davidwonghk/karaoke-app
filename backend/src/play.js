@@ -10,13 +10,13 @@ function resolver(req) {
 	if (id > curId) {
 		curId = id;
 		cur = queue.next().name || DEFAULT_SONG;
-		wss.boardcast({play: cur});
+		wss.broadcast({play: cur});
 	}
 	return '/videos/' + encodeURI(cur);
 }
 
 function current(req, res) {
-	res.json({playing: cur});
+	res.json({type: 'play', current: cur});
 }
 
 module.exports = {resolver, current};

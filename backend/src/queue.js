@@ -3,8 +3,9 @@ const { remote: wss } = require('./wss.js');
 const router = express.Router();
 
 const payload = {
-	'next': undefined, //only used for /?next
-	'queue': [],
+	type: 'queue',
+	next: undefined, //only used for /?next
+	queue: [],
 };
 
 router.get('/', (req, res) => {
@@ -21,7 +22,7 @@ router.post('/', (req, res) => {
 	const {name} = req.body;
 	const id = Date.now().toString();
 	queue.push({name, id});
-	boardcastUpdate(res);
+	broadcastUpdate(res);
 });
 
 // shuffle
@@ -30,7 +31,7 @@ router.put('/', (req, res) => {
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
-	boardcastUpdate(res);
+	broadcastUpdate(res);
 });
 
 // interrupt
@@ -42,7 +43,7 @@ router.put('/:id', (req, res) => {
 		queue.splice(i, 1);
 		queue.unshift(head);
 	}
-	boardcastUpdate(res);
+	broadcastUpdate(res);
 });
 
 router.delete('/:id', (req, res) => {
@@ -51,18 +52,18 @@ router.delete('/:id', (req, res) => {
 	if (i >= 0) {
 		queue.splice(i, 1);
 	}
-	boardcastUpdate(res);
+	broadcastUpdate(res);
 });
 
 function next() {
 	const {queue} = payload;
 	const res = queue.length && queue.shift();
-	wss.boardcast(payload);
+	wss.broadcast(payload);
 	return res;
 }
 
-function boardcastUpdate(res) {
-	wss.boardcast(payload);
+function broadcastUpdate(res) {
+	wss.broadcast(payload);
 	res.json(payload);
 }
 

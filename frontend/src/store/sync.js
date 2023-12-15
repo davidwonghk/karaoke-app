@@ -7,14 +7,11 @@ import { getWebSocket } from '../client';
 export default function syncWithBackend() {
 	getWebSocket().onmessage = (event) => {
 		const data = JSON.parse(event.data);
-		if (data.queue) {
-			store.dispatch(queueSlice.update(data));
-		}
-		if (data.play) {
-			store.dispatch(playSlice.update(data));
-		}
-		if (data.accompaniment !== undefined) {
-			store.dispatch(controlSlice.update(data));
+		switch (data.type) {
+			case 'queue': return store.dispatch(queueSlice.update(data));
+			case 'play': return store.dispatch(playSlice.update(data));
+			case 'control': return store.dispatch(controlSlice.update(data));
+			default: break;
 		}
 	};
 

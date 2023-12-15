@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getCurrentPlaying } from '../client';
 
 type State = {
-	play: string,
+	current: string,
 };
 
 
@@ -11,16 +11,16 @@ export const getAndUpdate = createAsyncThunk('play/getAndUpdate', getCurrentPlay
 export const slice = createSlice({
   name: 'play',
   initialState: {
-		play: '',
+		current: '',
   },
   reducers: {
 		update: (state, action) => {
-			state.play = action.payload;
+			state.current = action.payload.current;
 		},
   },
   extraReducers(builder) {
     builder.addCase(getAndUpdate.fulfilled, (state: State, action) => {
-      state.play = action.payload;
+      state.current = action.payload.current;
     });
   },
 });

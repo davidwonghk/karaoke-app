@@ -19,7 +19,7 @@ import { Song, deleteFromQueue, interruptQueue } from './client';
 const QueueTab = () => {
   //const dispatch = useDispatch<typeof store.dispatch>();
 	const queue = useSelector((state: any) => state.queue.queue);
-	const playing = useSelector((state: any) => state.queue.current);
+	const playing = useSelector((state: any) => state.play.current);
 
 	// define the style
 	const size = 'small';

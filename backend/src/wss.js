@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-function boardcast(wss, payload) {
+function broadcast(wss, payload) {
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
 			client.send(JSON.stringify(payload))
@@ -10,12 +10,16 @@ function boardcast(wss, payload) {
 
 const remote = {
 	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_PORT}),
-	boardcast: (payload) => boardcast(remote.wss, payload),
+	broadcast: (payload) => broadcast(remote.wss, payload),
 }
 
 const tv = {
 	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_TV_PORT}),
-	boardcast: (payload) => boardcast(tv.wss, payload),
+	broadcast: (payload) => broadcast(tv.wss, payload),
 }
+
+tv.wss.on('connection', (ws) => {
+	console.log('tv is connected');
+});
 
 module.exports = {remote, tv};

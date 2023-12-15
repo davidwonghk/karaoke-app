@@ -4,7 +4,8 @@ const wss = require('./wss.js');
 const router = express.Router();
 
 const payload = {
-	'accompaniment': false,
+	type: 'control',
+	accompaniment: false,
 };
 
 router.get('/', (req, res) => {
@@ -13,13 +14,13 @@ router.get('/', (req, res) => {
 
 router.post('/accompaniment', (req, res) => {
 	payload.accompaniment = !payload.accompaniment;
-	wss.remote.boardcast(payload);
-	wss.tv.boardcast(payload);
+	wss.remote.broadcast(payload);
+	wss.tv.broadcast(payload);
 	res.json(payload);
 });
 
 router.post('/skip', (req, res) => {
-	wss.tv.boardcast(payload);
+	wss.tv.broadcast(payload);
 });
 
 module.exports = {router};

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const apiUrl = 'http://localhost:8080';
-const wsUrl = 'ws://localhost:8081';
+const apiUrl = 'http://192.168.8.124:8080';
+const wsUrl = 'ws://192.168.8.124:8081';
 //const apiUrl = location.origin;
 //const wsUrl = apiUrl.replace(/^http/, 'ws');
 
