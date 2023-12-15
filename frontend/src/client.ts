@@ -73,8 +73,8 @@ export async function skipSong() {
 	return res.data;
 }
 
-export async function triggerAccompaniment() {
-	const res = await axios.post(`${apiUrl}/control/accompaniment`);
+export async function switchAudio() {
+	const res = await axios.post(`${apiUrl}/control/switchAudio`);
 	return res.data;
 }
 

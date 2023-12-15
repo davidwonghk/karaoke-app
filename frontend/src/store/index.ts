@@ -3,7 +3,6 @@ import tabReducer from "./tabSlice";
 import queueReducer from "./queueSlice";
 import searchReducer from "./searchSlice";
 import playReducer from "./playSlice";
-import controlReducer from "./controlSlice";
 
 
 const store = configureStore({
@@ -12,7 +11,6 @@ const store = configureStore({
 		queue: queueReducer,
 		search: searchReducer,
 		play: playReducer,
-		control: controlReducer,
 	},
 })
 

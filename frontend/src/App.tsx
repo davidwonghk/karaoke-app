@@ -16,13 +16,12 @@ import SearchTab from './SearchTab';
 import store from './store';
 import syncWithBackend from './store/sync';
 import { change } from './store/tabSlice';
-import { shuffleQueue, skipSong, triggerAccompaniment } from './client';
+import { shuffleQueue, skipSong, switchAudio } from './client';
 
 syncWithBackend();
 
 function App() {
 	const activeTab = useSelector((state: any) => state.tab.value);
-	const accompaniment = useSelector((state: any) => state.control.accompaniment);
   const dispatch = useDispatch<typeof store.dispatch>();
 	const onChangeTab = (_: any, val: string) => {dispatch(change(val))};
   return (
@@ -43,8 +42,8 @@ function App() {
 				<Toolbar disableGutters>
 					<Button 
 						aria-label='accompaniment'
-						icon={<InterpreterModeIcon color={accompaniment?'success':'inherit'}/>}
-						onClick={triggerAccompaniment}
+						icon={<InterpreterModeIcon />}
+						onClick={switchAudio}
 					>
 						Accompaniment
 					</Button>

@@ -6,11 +6,11 @@ const payload = {
 	type: 'play', 
 	current: DEFAULT_SONG,
 }
-var curId = 0;
+var curId = 'dummy';
 
 function resolver(req) { 
-	const id = parseInt(req.query.id);
-	if (id > curId) {
+	const id = req.query.id;
+	if (id != curId) {
 		curId = id;
 		payload.current = queue.next().name || DEFAULT_SONG;
 		wss.broadcast(payload);

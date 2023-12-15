@@ -1,7 +1,6 @@
 import store from './index';
 import * as queueSlice from './queueSlice';
 import * as playSlice from './playSlice';
-import * as controlSlice from './controlSlice';
 import { getWebSocket } from '../client';
 
 export default function syncWithBackend() {
@@ -10,7 +9,6 @@ export default function syncWithBackend() {
 		switch (data.type) {
 			case 'queue': return store.dispatch(queueSlice.update(data));
 			case 'play': return store.dispatch(playSlice.update(data));
-			case 'control': return store.dispatch(controlSlice.update(data));
 			default: break;
 		}
 	};
@@ -20,6 +18,5 @@ export default function syncWithBackend() {
 	// after that we wil reply on websocket to boardcast the update (see socket.onmessage)
 	store.dispatch(queueSlice.getAndUpdate());
 	store.dispatch(playSlice.getAndUpdate());
-	store.dispatch(controlSlice.getAndUpdate());
 }
 
