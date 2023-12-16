@@ -41,11 +41,11 @@ function App() {
 			<AppBar position="sticky" sx={{ top: 'auto', bottom: 0}}>
 				<Toolbar disableGutters>
 					<Button 
-						aria-label='accompaniment'
+						aria-label='switch audio'
 						icon={<InterpreterModeIcon />}
 						onClick={switchAudio}
 					>
-						Accompaniment
+						Switch Audio
 					</Button>
 					<Button aria-label='shuffle' icon={<ShuffleIcon />} onClick={shuffleQueue}>
 						Shuffle

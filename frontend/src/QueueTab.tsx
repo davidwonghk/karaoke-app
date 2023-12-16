@@ -25,7 +25,7 @@ const QueueTab = () => {
 	const size = 'small';
 
 	const MyText = ({children, color='white', variant='h5'}: {children:any, color?:string, variant?:any}) => (
-			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant={variant} color={color}>
+			<Typography noWrap sx={{paddingLeft: 1}} align='justify' variant={variant} color={color}>
 				{children}
 			</Typography>
 	);

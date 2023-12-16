@@ -57,7 +57,7 @@ const SearchTab = () => {
 	const color = 'white';
 
 	const MyText = ({children}: {children:any}) => (
-			<Typography noWrap sx={{paddingLeft: 5}} align='justify' variant='h5' color={color}>
+			<Typography noWrap sx={{paddingLeft: 2}} align='justify' variant='h5' color={color}>
 				{children}
 			</Typography>
 	);
@@ -81,10 +81,10 @@ const SearchTab = () => {
 			leadingActions={leadingActions(children)}
 			onClick={() => appendQueue(children)}
 			maxSwipe={0.4}
-			onSwipeProgress={(progress, dir) => (dir==='right' && progress>=30) && addAndInterrupt(children)}
+			onSwipeProgress={(progress, dir) => (dir==='right' && progress>=40) && addAndInterrupt(children)}
 		>
+			<Badge badgeContent={count} color="success" sx={{visibility: count?'visible':'hidden', paddingLeft: 1}} />
 			<MyText>{children}</MyText>
-			{count && <Badge badgeContent={count} color="success" sx={{paddingLeft: 2}}/> }
 		</SwipeableListItem>
 	);
 
