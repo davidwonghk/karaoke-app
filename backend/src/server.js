@@ -9,7 +9,7 @@ const mdns = require('mdns');
 const txtRecord = {
 	app: 'karaoke',
 	service_port: SERVICE_PORT, 
-	websocket_port: process.env.WEBSOCKET_PORT,
+	ws_tv_port: process.env.WEBSOCKET_TV_PORT,
 };
 const ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord});
 ad.start();
