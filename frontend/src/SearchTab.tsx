@@ -8,7 +8,6 @@ import {
 	SwipeableListItem,
 	SwipeAction,
 	LeadingActions,
-	TrailingActions,
 } from 'react-swipeable-list';
 
 import { useDispatch, useSelector } from 'react-redux'
