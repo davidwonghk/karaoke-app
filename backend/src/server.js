@@ -1,5 +1,7 @@
 require("dotenv").config();
-const SERVICE_PORT = process.env.NODE_DOCKER_PORT;
+const PORT = parseInt(process.env.NODE_DOCKER_PORT);
+const MDNS_PORT = parseInt(process.env.MDNS_PORT);
+const TVPORT = parseInt(process.env.WEBSOCKET_TV_PORT);
 
 //------------------------------
 // mdns
@@ -8,10 +10,10 @@ const mdns = require('mdns');
 // advertise a http server on port 4321
 const txtRecord = {
 	app: 'karaoke',
-	service_port: SERVICE_PORT, 
-	ws_tv_port: process.env.WEBSOCKET_TV_PORT,
+	wsport: TVPORT,
+	port: PORT,
 };
-const ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord});
+const ad = mdns.createAdvertisement(mdns.tcp('http'), MDNS_PORT, {txtRecord});
 ad.start();
 
 //------------------------------
@@ -38,6 +40,6 @@ app.use('/play', proxy(process.env.VIDEO_HOST, {
 app.use('/videos', express.static('../videos'));
 
 // set port, listen for requests
-app.listen(SERVICE_PORT, () => {
-  console.log(`Server is running on port ${SERVICE_PORT}.`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });

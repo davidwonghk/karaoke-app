@@ -19,7 +19,7 @@ const tv = {
 }
 
 tv.wss.on('connection', (ws) => {
-	console.log('tv is connected');
+	console.log(new Date(Date.now()), ': tv is connected');
 });
 
 module.exports = {remote, tv};
