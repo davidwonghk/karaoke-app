@@ -1,11 +1,16 @@
 //------------------------------
 // config setup
 require('dotenv').config();
+
+const ip = require('./ip.js');
 const PORT = parseInt(process.env.KARAOKE_SERVER_PORT);
 const MDNS_PORT = parseInt(process.env.KARAOKE_MDNS_PORT);
 const TVPORT = parseInt(process.env.KARAOKE_TV_PORT);
 const FRONTEND_DIRECTORY = process.env.KARAOKE_FRONTEND_DIRECTORY;
+
+const internalHost = `http://${ip.internal()}:${PORT}`;
 const VIDEO_DIRECTORY = process.env.KARAOKE_VIDEO_DIRECTORY;
+const VIDEO_HOST= process.env.KARAOKE_VIDEO_HOST || internalHost;
 
 //------------------------------
 // logger
@@ -32,7 +37,6 @@ const cors = require('cors');
 
 const app = express()
 const play = require('./play.js');
-const { internal } = require('./ip.js');
 
 app.use(cors());
 app.use(express.json());
@@ -40,7 +44,7 @@ app.use('/queue', require('./queue.js').router);
 app.use('/songs', require('./songs.js').router);
 app.use('/control', require('./control.js').router);
 app.get('/current', play.current);
-app.use('/play', proxy(process.env.KARAOKE_VIDEO_HOST, {
+app.use('/play', proxy(VIDEO_HOST, {
 		proxyReqPathResolver: play.resolver
 	}
 ));
@@ -61,6 +65,6 @@ app.listen(PORT, () => {
 		`Server is running on port ${PORT}.\n`,
 		"You can now view the client in the browser.\n",
 		`Local:            http://localhost:${PORT}/app\n`,
-		`On Your Network:  http://${internal()}:${PORT}/app\n`,
+		`On Your Network:  ${internalHost}/app\n`,
 	);
 });
