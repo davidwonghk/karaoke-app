@@ -9,22 +9,26 @@ function broadcast(wss, payload) {
 	});
 }
 
+function logOnConnection(name) {
+	return (ws, req) => {
+		const address = req.socket.remoteAddress;
+		logger.info(`${name} is connected: ${address}`);
+		ws.on('message', (data) => logger.debug(`${name} sends`, data));
+		ws.on('close', () => logger.info(`${name} is closed: ${address}`));
+	};
+}
+
 const remote = {
 	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_WEBSOCKET_PORT}),
 	broadcast: (payload) => broadcast(remote.wss, payload),
 };
-remote.wss.on('connection', (ws) => {
-	const { protocol, url, readyState } = ws;
-	logger.info('remote is connected: ', { protocol, url, readyState } );
-});
+remote.wss.on('connection', logOnConnection('remove'));
 
 const tv = {
 	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_TV_PORT}),
 	broadcast: (payload) => broadcast(tv.wss, payload),
 };
-tv.wss.on('connection', (ws) => {
-	const { protocol, url, readyState } = ws;
-	logger.info('tv is connected: ', { protocol, url, readyState } );
-});
+tv.wss.on('connection', logOnConnection('tv'));
+
 
 module.exports = {remote, tv};
