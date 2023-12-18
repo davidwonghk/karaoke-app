@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('./logger.js');
 const { remote: wss } = require('./wss.js');
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.post('/', (req, res) => {
 
 // shuffle
 router.put('/', (req, res) => {
+	logger.debug(`received shuffle: ${req.socket.remoteAddress}`)
 	payload.queue = payload.queue
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -38,6 +40,7 @@ router.put('/', (req, res) => {
 
 // interrupt
 router.put('/:id', (req, res) => {
+	logger.debug(`received interrupt: ${req.socket.remoteAddress}`)
 	const {queue}  = payload;
 	i = queue.findIndex(s=>s.id===req.params.id);
 	if (i > 0) { //no need to interrupt if i == 0
@@ -62,6 +65,7 @@ router.delete('/:id', (req, res) => {
 function next() {
 	const {queue} = payload;
 	const res = queue.length && queue.shift();
+	logger.debug(`next song: ${res}`)
 	wss.broadcast(payload);
 	return res;
 }
