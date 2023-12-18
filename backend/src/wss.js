@@ -22,7 +22,7 @@ const remote = {
 	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_WEBSOCKET_PORT}),
 	broadcast: (payload) => broadcast(remote.wss, payload),
 };
-remote.wss.on('connection', logOnConnection('remove'));
+remote.wss.on('connection', logOnConnection('remote'));
 
 const tv = {
 	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_TV_PORT}),
