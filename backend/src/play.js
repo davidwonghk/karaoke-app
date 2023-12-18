@@ -1,28 +1,35 @@
+const logger = require('./logger.js');
 const queue = require('./queue.js');
 const { remote: wss } = require('./wss.js');
-const logger = require('./logger.js');
+const { findSong } = require('./songs.js');
 
-const DEFAULT_SONG = "PSY-偶爸甘吶屎.mkv";
-const payload = {
-	type: 'play', 
-	current: DEFAULT_SONG,
-}
+const DEFAULT_SONG = {
+	name: "冇點歌",
+	loc: "PSY-偶爸甘吶屎.mkv",
+};
+var cur = DEFAULT_SONG;
 var curId = 'dummy';
 
 function resolver(req) { 
 	const id = req.query.id;
 	if (id != curId) {
 		curId = id;
-		payload.current = queue.next().name || DEFAULT_SONG;
-		wss.broadcast(payload);
+		cur = findSong(queue.next().name) || DEFAULT_SONG;
+
+		wss.broadcast(payload());
 		queue.broadcast();
-		logger.debug("requested next song", {id}, payload.current);
+
+		logger.debug(`requested next song ${cur.name}(${id})`);
 	}
-	return '/videos/' + encodeURI(payload.current);
+	return '/videos/' + encodeURI(cur.loc);
 }
 
 function current(req, res) {
-	res.json(payload);
+	res.json(payload());
+}
+
+function payload() {
+	return {type: 'play', current: cur.name};
 }
 
 module.exports = {resolver, current};

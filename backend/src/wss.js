@@ -4,7 +4,7 @@ const logger = require('./logger.js');
 function broadcast(wss, payload) {
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
-			logger.debug(`broadcast to client ${client._socket.remoteAddress}: ${payload&&payload.type}`);
+			logger.debug(`broadcast to client ${client._socket.remoteAddress}: ${(payload&&payload.type) || payload}`);
 			client.send(JSON.stringify(payload))
 		}
 	});

@@ -14,8 +14,10 @@ let allSongs = [];
 
 	const dir = await fs.promises.opendir(videoDir);
 	const result = [];
-	for await (const {name} of dir) {
-		result.push({name});
+	for await (const d of dir) {
+		const loc = d.name;
+		const name = loc.endsWith('.mkv') ? loc.slice(0, -4) : loc;
+		result.push({loc, name});
 	}
 	return result;
 })().then(payload => allSongs = payload);
@@ -30,4 +32,8 @@ router.get('/', (req, res) => {
 	)});
 });
 
-module.exports = {router};
+function findSong(name) {
+	return allSongs.find(song=>song.name === name)
+}
+
+module.exports = {router, findSong};
