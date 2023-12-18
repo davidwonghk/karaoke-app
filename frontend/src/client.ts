@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-const apiUrl = 'http://192.168.8.124:8080';
-const wsUrl = 'ws://192.168.8.124:8081';
-//const apiUrl = location.origin;
-//const wsUrl = apiUrl.replace(/^http/, 'ws');
+const SERVER_PORT = process.env.KARAOKE_SERVER_PORT || '8080';
+const WEBSOCKET_PORT = process.env.KARAOKE_WEBSOCKET_PORT || '8081';
+
+const apiUrl = `http://${window.location.hostname}:${SERVER_PORT}`;
+const wsUrl = `ws://${window.location.hostname}:${WEBSOCKET_PORT}`;
 
 export type Song = {
 	name: string,
