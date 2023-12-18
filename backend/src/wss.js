@@ -9,14 +9,14 @@ function broadcast(wss, payload) {
 }
 
 const remote = {
-	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_PORT}),
+	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_WEBSOCKET_PORT}),
 	broadcast: (payload) => broadcast(remote.wss, payload),
-}
+};
 
 const tv = {
-	wss: new WebSocket.WebSocketServer({port: process.env.WEBSOCKET_TV_PORT}),
+	wss: new WebSocket.WebSocketServer({port: process.env.KARAOKE_TV_PORT}),
 	broadcast: (payload) => broadcast(tv.wss, payload),
-}
+};
 
 tv.wss.on('connection', (ws) => {
 	console.log(new Date(Date.now()), ': tv is connected');

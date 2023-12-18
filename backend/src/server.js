@@ -1,7 +1,9 @@
 require("dotenv").config();
-const PORT = parseInt(process.env.NODE_DOCKER_PORT);
-const MDNS_PORT = parseInt(process.env.MDNS_PORT);
-const TVPORT = parseInt(process.env.WEBSOCKET_TV_PORT);
+const PORT = parseInt(process.env.KARAOKE_SERVER_PORT);
+const MDNS_PORT = parseInt(process.env.KARAOKE_MDNS_PORT);
+const TVPORT = parseInt(process.env.KARAOKE_TV_PORT);
+const FRONTEND_DIRECTORY = process.env.KARAOKE_FRONTEND_DIRECTORY;
+const VIDEO_DIRECTORY = process.env.KARAOKE_VIDEO_DIRECTORY;
 
 //------------------------------
 // mdns
@@ -31,13 +33,19 @@ app.use('/queue', require('./queue.js').router);
 app.use('/songs', require('./songs.js').router);
 app.use('/control', require('./control.js').router);
 app.get('/current', play.current);
-app.use('/play', proxy(process.env.VIDEO_HOST, {
+app.use('/play', proxy(process.env.KARAOKE_VIDEO_HOST, {
 		proxyReqPathResolver: play.resolver
 	}
 ));
+// frontend client content
+if (!!FRONTEND_DIRECTORY) {
+	app.use('/app', express.static(FRONTEND_DIRECTORY));
+}
 // videos content server, 
 // may move to a standalone server in the future
-app.use('/videos', express.static('../videos'));
+if (!!VIDEO_DIRECTORY) {
+	app.use('/videos', express.static(VIDEO_DIRECTORY));
+}
 
 // set port, listen for requests
 app.listen(PORT, () => {

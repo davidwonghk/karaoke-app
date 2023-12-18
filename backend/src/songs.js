@@ -9,7 +9,10 @@ const payload = {
 //load all songs
 let allSongs = [];
 (async () => {
-	const dir = await fs.promises.opendir(process.env.VIDEO_DIRECTORY);
+	const videoDir = process.env.KARAOKE_VIDEO_DIRECTORY;
+	if (!videoDir) return [];
+
+	const dir = await fs.promises.opendir(videoDir);
 	const result = [];
 	for await (const {name} of dir) {
 		result.push({name});
