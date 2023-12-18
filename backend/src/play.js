@@ -1,5 +1,6 @@
 const queue = require('./queue.js');
 const { remote: wss } = require('./wss.js');
+const logger = require('./logger.js');
 
 const DEFAULT_SONG = "PSY-偶爸甘吶屎.mkv";
 const payload = {
@@ -15,6 +16,7 @@ function resolver(req) {
 		payload.current = queue.next().name || DEFAULT_SONG;
 		wss.broadcast(payload);
 		queue.broadcast();
+		logger.debug("requested next song", {id}, payload.current);
 	}
 	return '/videos/' + encodeURI(payload.current);
 }

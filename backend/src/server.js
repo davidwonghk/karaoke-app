@@ -1,9 +1,15 @@
-require("dotenv").config();
+//------------------------------
+// config setup
+require('dotenv').config();
 const PORT = parseInt(process.env.KARAOKE_SERVER_PORT);
 const MDNS_PORT = parseInt(process.env.KARAOKE_MDNS_PORT);
 const TVPORT = parseInt(process.env.KARAOKE_TV_PORT);
 const FRONTEND_DIRECTORY = process.env.KARAOKE_FRONTEND_DIRECTORY;
 const VIDEO_DIRECTORY = process.env.KARAOKE_VIDEO_DIRECTORY;
+
+//------------------------------
+// logger
+const logger = require('./logger.js');
 
 //------------------------------
 // mdns
@@ -46,8 +52,7 @@ if (!!FRONTEND_DIRECTORY) {
 if (!!VIDEO_DIRECTORY) {
 	app.use('/videos', express.static(VIDEO_DIRECTORY));
 }
-
 // set port, listen for requests
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+	logger.info(`Server is running on port ${PORT}.`);
 });
