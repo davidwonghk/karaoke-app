@@ -31,8 +31,8 @@ function App() {
 					onChange={onChangeTab} 
 					variant="fullWidth"
 				> 
-					<Tab icon={<QueueMusicIcon />} value="queue" label="Queue"/>
 					<Tab icon={<ManageSearchIcon />} value="search" label="Search" />
+					<Tab icon={<QueueMusicIcon />} value="queue" label="Queue"/>
 				</Tabs>
 			</AppBar>
 

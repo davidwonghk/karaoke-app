@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const tabSlice = createSlice({
   name: 'tab',
   initialState: {
-    value: 'queue',
+    value: 'search',
   },
   reducers: {
     change: (state, action) => {
