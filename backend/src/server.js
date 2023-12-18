@@ -32,6 +32,7 @@ const cors = require('cors');
 
 const app = express()
 const play = require('./play.js');
+const { internal } = require('./ip.js');
 
 app.use(cors());
 app.use(express.json());
@@ -55,4 +56,11 @@ if (!!VIDEO_DIRECTORY) {
 // set port, listen for requests
 app.listen(PORT, () => {
 	logger.info(`Server is running on port ${PORT}.`);
+
+	console.log(
+		`Server is running on port ${PORT}.\n`,
+		"You can now view the client in the browser.\n",
+		`Local:            http://localhost:${PORT}/app\n`,
+		`On Your Network:  http://${internal()}:${PORT}/app\n`,
+	);
 });
